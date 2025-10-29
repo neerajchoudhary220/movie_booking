@@ -31,4 +31,8 @@ class Theatre extends Model
     {
         return $this->hasManyThrough(Show::class, Screen::class);
     }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }

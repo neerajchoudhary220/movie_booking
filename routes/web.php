@@ -6,6 +6,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\MovieBrowseController;
+use App\Http\Controllers\ScreenController;
+use App\Http\Controllers\SeatController;
+use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TheatreController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,15 +23,29 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
     });
-
-    //Theatres
-    Route::resource('theatres', TheatreController::class);
-
-    // Only Admins & Managers can access Movie CRUD
+    //Movies
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('movies', MovieController::class);
     });
+    //Theatres
+    Route::resource('theatres', TheatreController::class);
+    //Screens
+    Route::resource('screens', ScreenController::class);
+    //Shows
+    Route::resource('shows', ShowController::class);
+    //Seats
+    Route::controller(SeatController::class)->prefix('screens/{screen}/seats')->name('screens.seats.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{seat}/edit', 'edit')->name('edit');
+        Route::put('/{seat}', 'update')->name('update');
+        Route::delete('/{seat}', 'destroy')->name('destroy');
+        Route::post('/generate-layout', 'generateLayout')->name('generate');
+        Route::post('/{seat}/toggle', 'toggleStatus')->name('toggle');
+    });
 
+    // Route::resource('seats', SeatController::class);
     //Bookings
     Route::controller(BookingController::class)->prefix('bookings')->group(function () {
         Route::get('/', 'index')->name('bookings');

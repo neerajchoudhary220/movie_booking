@@ -30,4 +30,10 @@ class Screen extends Model
     {
         return $this->hasMany(Seat::class);
     }
+
+    //Scopes
+    public function scopeForManager($query, $managerId)
+    {
+        return $query->where('manger_id', $managerId);
+    }
 }

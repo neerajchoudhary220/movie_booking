@@ -23,6 +23,15 @@
             </li>
 
             <li>
+                <x-nav-link :href="route('admin.movies.index')" :active="request()->routeIs('admin.movies.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-ticket-perforated text-gray-500 w-5 text-center"></i>
+                        Movies
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
                 <x-nav-link :href="route('theatres.index')" :active="request()->routeIs('theatres.*')">
                     <div class="flex items-center gap-2">
                         <i class="bi bi-building text-gray-500 w-5 text-center"></i>
@@ -31,14 +40,34 @@
                 </x-nav-link>
             </li>
 
+
             <li>
-                <x-nav-link :href="route('admin.movies.index')" :active="request()->routeIs('admin.movies.*')">
+                <x-nav-link :href="route('screens.index')" :active="request()->routeIs('screens.*')">
                     <div class="flex items-center gap-2">
-                        <i class="bi bi-ticket-perforated text-gray-500 w-5 text-center"></i>
-                        Movies
+                        <i class="bi bi-tv text-gray-500 w-5 text-center"></i>
+                        Screens
                     </div>
                 </x-nav-link>
             </li>
+
+            <li>
+                <x-nav-link :href="route('shows.index')" :active="request()->routeIs('shows.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-calendar-event text-gray-500 w-5 text-center"></i>
+                        Shows
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link href="#" :active="request()->routeIs('seats.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-box2 text-gray-500 w-5 text-center"></i>
+                        Seats
+                    </div>
+                </x-nav-link>
+            </li>
+
 
             <li>
                 <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings.*')">
@@ -50,38 +79,7 @@
             </li>
         </ul>
 
-        <!-- Manager Section -->
-        @role('Manager')
-        <div class="px-2 pt-6 pb-2 text-xs uppercase tracking-wider text-gray-500">Manager</div>
-        <ul class="space-y-1">
-            <li>
-                <x-nav-link href="#" :active="request()->routeIs('shows.*')">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-regular fa-clock text-gray-500 w-5 text-center"></i>
-                        Shows
-                    </div>
-                </x-nav-link>
-            </li>
 
-            <li>
-                <x-nav-link href="#" :active="request()->routeIs('screens.*')">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-tv text-gray-500 w-5 text-center"></i>
-                        Screens
-                    </div>
-                </x-nav-link>
-            </li>
-
-            <li>
-                <x-nav-link href="#" :active="request()->routeIs('seats.*')">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-chair text-gray-500 w-5 text-center"></i>
-                        Seats
-                    </div>
-                </x-nav-link>
-            </li>
-        </ul>
-        @endrole
     </nav>
 
     <!-- Footer -->

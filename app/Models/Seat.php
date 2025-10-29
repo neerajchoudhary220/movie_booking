@@ -42,4 +42,16 @@ class Seat extends Model
     {
         return $q->where('status', self::STATUS_AVAILABLE);
     }
+    public function scopePending($q)
+    {
+        return $q->where('status', self::STATUS_PENDING);
+    }
+    public function scopeBooked($q)
+    {
+        return $q->where('status', self::STATUS_BOOKED);
+    }
+    public function scopeBlocked($q)
+    {
+        return $q->where('status', self::STATUS_BLOCKED);
+    }
 }

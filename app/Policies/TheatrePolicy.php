@@ -40,10 +40,6 @@ class TheatrePolicy
         if ($user->hasRole('Admin')) {
             return true;
         }
-        if ($user->hasRole('Manager')) {
-            // managers assigned to theatre or manager manages only their theatre(s)
-            return $theatre->manager_id === $user->id;
-        }
         return false;
     }
 
