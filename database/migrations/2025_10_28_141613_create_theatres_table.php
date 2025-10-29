@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('pincode', 10)->nullable();
-            $table->string('contact_number')->nullable();
+            $table->foreignId('manager_id')->nullable()->constrained('users')->nullOnDelete();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

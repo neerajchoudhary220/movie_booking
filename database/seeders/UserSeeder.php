@@ -23,7 +23,6 @@ class UserSeeder extends Seeder
             'name' => 'Manager 1',
             'email' => 'manager@example.com',
             'password' => 'manager@123',
-            'theatre_id' => 1,
         ]);
         $manager->assignRole('Manager');
         $customer = User::create([

@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         //Roles & Permissions
         $this->call(RolesAndPermissionsSeeder::class);
-        //Theatres
-        $this->call(TheatreSeeder::class);
         //Users
         $this->call(UserSeeder::class);
+        //Theatres
+        $this->call(TheatreSeeder::class);
         //Screens
         $this->call(ScreenSeeder::class);
 

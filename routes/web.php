@@ -1,27 +1,39 @@
 
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\MovieBrowseController;
+use App\Http\Controllers\TheatreController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
 Route::controller(MovieBrowseController::class)->group(function () {
-    Route::get('/', 'index')->name('movies.public');
+    Route::get('/', 'index')->name('movies');
     Route::get('show-times', 'showtimes')->name('movies.showtimes');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::middleware(['auth'])->group(function () {
-    Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
-        Route::get('/', 'index')->name('dashbaord');
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+    });
+
+    //Theatres
+    Route::resource('theatres', TheatreController::class);
+
+    // Only Admins & Managers can access Movie CRUD
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('movies', MovieController::class);
+    });
+
+    //Bookings
+    Route::controller(BookingController::class)->prefix('bookings')->group(function () {
+        Route::get('/', 'index')->name('bookings');
+        Route::post('reserve', 'reserve')->name('booking.reserve');
+        Route::post('{bookingId}/confirm', 'confirm')->name('booking.confirm');
     });
 });
 

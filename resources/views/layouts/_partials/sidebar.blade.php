@@ -1,41 +1,91 @@
-<nav class="flex-1 p-3">
-    <div class="px-2 py-3 text-xs uppercase tracking-wider text-gray-500">Main</div>
-    <ul class="space-y-1">
-        <li>
-            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                Dashboard
-            </x-nav-link>
-        </li>
-        <li>
-            <x-nav-link :href="route('movies.index')" :active="request()->routeIs('movies.*')">
-                Movies
-            </x-nav-link>
-        </li>
-        <li>
-            <x-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.*')">
-                Bookings
-            </x-nav-link>
-        </li>
-    </ul>
+<aside
+    class="hidden md:flex md:flex-col w-64 h-screen bg-white border-r border-gray-200 shadow-sm fixed left-0 top-0 z-40 transition-all duration-300">
 
-    @role('Admin')
-    <div class="px-2 pt-6 pb-2 text-xs uppercase tracking-wider text-gray-500">Administration</div>
-    <ul class="space-y-1">
-        <li><x-nav-link :href="route('theatres.index')" :active="request()->routeIs('theatres.*')">Theatres</x-nav-link></li>
-        <li><x-nav-link :href="route('screens.index')" :active="request()->routeIs('screens.*')">Screens</x-nav-link></li>
-        <li><x-nav-link :href="route('shows.index')" :active="request()->routeIs('shows.*')">Shows</x-nav-link></li>
-        <li><x-nav-link :href="route('seats.index')" :active="request()->routeIs('seats.*')">Seats</x-nav-link></li>
-        <li><x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">Users</x-nav-link></li>
-    </ul>
-    @endrole
+    <!-- Brand / Logo -->
+    <div class="h-16 flex items-center justify-center border-b border-gray-100">
+        <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-gray-800 hover:text-indigo-600 transition">
+            <i class="fa-solid fa-ticket text-indigo-600 mr-1"></i> Movie<span class="text-indigo-600">Book</span>
+        </a>
+    </div>
 
-    @role('Manager')
-    <div class="px-2 pt-6 pb-2 text-xs uppercase tracking-wider text-gray-500">Manager</div>
-    <ul class="space-y-1">
-        <li><x-nav-link :href="route('manager.screens')" :active="request()->routeIs('manager.screens')">My Screens</x-nav-link></li>
-        <li><x-nav-link :href="route('manager.shows')" :active="request()->routeIs('manager.shows')">My Shows</x-nav-link></li>
-        <li><x-nav-link :href="route('manager.seats')" :active="request()->routeIs('manager.seats')">My Seats</x-nav-link></li>
-        <li><x-nav-link :href="route('manager.dashboard')" :active="request()->routeIs('manager.dashboard')">Stats</x-nav-link></li>
-    </ul>
-    @endrole
-</nav>
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto p-4">
+        <!-- Main Section -->
+        <div class="px-2 py-2 text-xs uppercase tracking-wider text-gray-500">Main</div>
+        <ul class="space-y-1">
+            <li>
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-speedometer2 text-gray-500 w-5 text-center"></i>
+                        Dashboard
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link :href="route('theatres.index')" :active="request()->routeIs('theatres.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-building text-gray-500 w-5 text-center"></i>
+                        Theatres
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link :href="route('admin.movies.index')" :active="request()->routeIs('admin.movies.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-ticket-perforated text-gray-500 w-5 text-center"></i>
+                        Movies
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-journal-bookmark text-gray-500 w-5 text-center"></i>
+                        Bookings
+                    </div>
+                </x-nav-link>
+            </li>
+        </ul>
+
+        <!-- Manager Section -->
+        @role('Manager')
+        <div class="px-2 pt-6 pb-2 text-xs uppercase tracking-wider text-gray-500">Manager</div>
+        <ul class="space-y-1">
+            <li>
+                <x-nav-link href="#" :active="request()->routeIs('shows.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-regular fa-clock text-gray-500 w-5 text-center"></i>
+                        Shows
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link href="#" :active="request()->routeIs('screens.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-tv text-gray-500 w-5 text-center"></i>
+                        Screens
+                    </div>
+                </x-nav-link>
+            </li>
+
+            <li>
+                <x-nav-link href="#" :active="request()->routeIs('seats.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-chair text-gray-500 w-5 text-center"></i>
+                        Seats
+                    </div>
+                </x-nav-link>
+            </li>
+        </ul>
+        @endrole
+    </nav>
+
+    <!-- Footer -->
+    <div class="p-3 border-t border-gray-100 text-center text-xs text-gray-400">
+        © {{ date('Y') }} MovieBook
+    </div>
+</aside>

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('movie_id')->constrained()->cascadeOnDelete();
             $table->foreignId('screen_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('theatre_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->dateTime('starts_at');
             $table->dateTime('ends_at')->nullable();
             $table->decimal('base_price', 10, 2)->default(120.00);
@@ -24,6 +27,7 @@ return new class extends Migration
             $table->timestamps();
             $table->unique(['screen_id', 'starts_at']); // no overlapping start on same screen
             $table->index(['movie_id', 'starts_at']);
+            $table->index(['theatre_id', 'status']);
         });
     }
 

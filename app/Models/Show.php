@@ -15,6 +15,7 @@ class Show extends Model
     protected $fillable = [
         'movie_id',
         'screen_id',
+        'theatre_id',
         'starts_at',
         'ends_at',
         'base_price',
@@ -39,6 +40,11 @@ class Show extends Model
         return $this->belongsTo(Screen::class);
     }
 
+    public function theatre()
+    {
+        return $this->belongsTo(Theatre::class);
+    }
+
     // Per-show seat states
     public function showSeats()
     {
@@ -48,5 +54,25 @@ class Show extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    //Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_SCHEDULED)
+            ->orWhere('status', self::STATUS_RUNNING);
+    }
+    public function scopeUpcoming($query)
+    {
+        return $query->where('starts_at', '>=', now());
+    }
+
+    public function scopeByTheatre($query, $theatreId)
+    {
+        return $query->where('theatre_id', $theatreId);
+    }
+    public function scopeByManager($query, $managerId)
+    {
+        return $query->whereHas('theatre', fn($t) => $t->where('manager_id', $managerId));
     }
 }

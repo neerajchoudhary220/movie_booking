@@ -12,18 +12,23 @@ class Theatre extends Model
         'city',
         'state',
         'pincode',
-        'contact_number',
         'status',
+        'manager_id'
     ];
 
-    public function managers()
+    public function manager()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class, 'manager_id');
     }
 
     // One theatre can have many screens
     public function screens()
     {
         return $this->hasMany(Screen::class);
+    }
+
+    public function shows()
+    {
+        return $this->hasManyThrough(Show::class, Screen::class);
     }
 }

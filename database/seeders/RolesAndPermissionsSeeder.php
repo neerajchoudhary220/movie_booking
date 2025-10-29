@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -14,28 +13,116 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        //create Roles
+        // --- Create Roles ---
         $admin = Role::firstOrCreate(['name' => 'Admin']);
         $manager = Role::firstOrCreate(['name' => 'Manager']);
         $customer = Role::firstOrCreate(['name' => 'Customer']);
 
-        // Create permissions
+        // --- Define Permissions (according to the assessment) ---
         $permissions = [
-            'manage theatres',
-            'manage screens',
-            'manage shows',
-            'manage seats',
+
+            //Movies
+            'view movies',
+            'create movies',
+            'edit movies',
+            'delete movies',
+
+            //Theatres
+            'view theatres',
+            'create theatres',
+            'edit theatres',
+            'delete theatres',
+
+            //Screens
+            'view screens',
+            'create screens',
+            'edit screens',
+            'delete screens',
+
+            //Shows
+            'view shows',
+            'create shows',
+            'edit shows',
+            'delete shows',
+
+            //Seats
+            'view seats',
+            'create seats',
+            'edit seats',
+            'delete seats',
+
+            //Bookings
+            'view bookings',
+            'create bookings',
+            'cancel bookings',
+
+            //Dashboard & Reports
             'view dashboard',
-            'book seats'
+            'view reports',
+
+            //Notifications
+            'send notifications',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // Assign permissions to roles
-        $admin->givePermissionTo(Permission::all());
-        $manager->givePermissionTo(['manage screens', 'manage shows', 'manage seats', 'view dashboard']);
-        $customer->givePermissionTo(['book seats']);
+        // ===========================================================
+        //  ADMIN → Full Access
+        // ===========================================================
+        $admin->syncPermissions(Permission::all());
+
+        // ===========================================================
+        // MANAGER → Manage only within their Theatre
+        // ===========================================================
+        $manager->syncPermissions([
+            // Movies (manage only movies linked to their theatre)
+            'view movies',
+            'create movies',
+            'edit movies',
+            'delete movies',
+
+            // Theatres (view-only)
+            'view theatres',
+
+            // Screens (full CRUD)
+            'view screens',
+            'create screens',
+            'edit screens',
+            'delete screens',
+
+            // Shows (full CRUD)
+            'view shows',
+            'create shows',
+            'edit shows',
+            'delete shows',
+
+            // Seats (full CRUD)
+            'view seats',
+            'create seats',
+            'edit seats',
+            'delete seats',
+
+            // Bookings (view-only)
+            'view bookings',
+
+            // Dashboard & Notifications
+            'view dashboard',
+            'send notifications',
+        ]);
+
+        // ===========================================================
+        // CUSTOMER → Frontend Access Only
+        // ===========================================================
+        $customer->syncPermissions([
+            'view movies',
+            'view theatres',
+            'view screens',
+            'view shows',
+            'view seats',
+            'create bookings',
+            'cancel bookings',
+        ]);
     }
 }

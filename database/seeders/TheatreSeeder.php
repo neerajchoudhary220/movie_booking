@@ -13,29 +13,58 @@ class TheatreSeeder extends Seeder
      */
     public function run(): void
     {
-        // Using updateOrCreate to avoid duplicates
-        Theatre::updateOrCreate(
-            ['name' => 'INOX City Mall'], // unique key
+
+        $theatres = [
             [
-                'location' => 'MG Road, Jaipur',
+                'name' => 'Inox City Mall',
+                'location' => 'City Mall, Ajmer Road',
+                'city' => 'Jaipur',
+                'state' => 'Rajasthan',
+                'pincode' => '302019',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'PVR Crown Plaza',
+                'location' => 'Crown Plaza, Vaishali Nagar',
+                'city' => 'Jaipur',
+                'state' => 'Rajasthan',
+                'pincode' => '302021',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Carnival Cinemas',
+                'location' => 'GT Road, Alwar',
+                'city' => 'Alwar',
+                'state' => 'Rajasthan',
+                'pincode' => '301001',
+                'status' => 'inactive',
+            ],
+            [
+                'name' => 'Rajmandir Cinema',
+                'location' => 'MI Road',
                 'city' => 'Jaipur',
                 'state' => 'Rajasthan',
                 'pincode' => '302001',
-                'contact_number' => '9999999999',
                 'status' => 'active',
-            ]
-        );
-
-        Theatre::updateOrCreate(
-            ['name' => 'PVR Central Mall'],
+            ],
             [
-                'location' => 'Tonk Road, Jaipur',
-                'city' => 'Jaipur',
+                'name' => 'Wave Multiplex',
+                'location' => 'Pacific Mall, Vaibhav Nagar',
+                'city' => 'Udaipur',
                 'state' => 'Rajasthan',
-                'pincode' => '302015',
-                'contact_number' => '8888888888',
+                'pincode' => '313001',
                 'status' => 'active',
-            ]
-        );
+            ],
+        ];
+
+        foreach ($theatres as $data) {
+            Theatre::updateOrCreate(
+                [
+                    'name' => $data['name'],
+                    'location' => $data['location'],
+                ],
+                $data
+            );
+        }
     }
 }
