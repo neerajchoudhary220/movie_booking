@@ -10,24 +10,33 @@ use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
-    // public function __construct(protected BookingService $bookingService) {}
 
     public function index(Request $request)
     {
+        $user = $request->user();
         $query = trim((string) $request->input('q', ''));
+
         $bookings = Booking::with(['user', 'show.movie', 'show.screen.theatre', 'items.seat'])
+            ->when($user->hasRole('Manager'), function ($q) use ($user) {
+                // Limit to bookings for theatres managed by this manager
+                $q->whereHas('show.screen.theatre', function ($t) use ($user) {
+                    $t->where('manager_id', $user->id);
+                });
+            })
             ->when($query !== '', function ($q) use ($query) {
-                $q->whereHas('user', fn($u) => $u->where('name', 'like', "%{$query}%"))
-                    ->orWhereHas('show.movie', fn($m) => $m->where('title', 'like', "%{$query}%"))
-                    ->orWhereHas('show.screen.theatre', fn($t) => $t->where('name', 'like', "%{$query}%"))
-                    ->orWhereHas('items.seat', fn($s) => $s->where('seat_number', 'like', "%{$query}%"));
+                $q->where(function ($sub) use ($query) {
+                    $sub->whereHas('user', fn($u) => $u->where('name', 'like', "%{$query}%"))
+                        ->orWhereHas('show.movie', fn($m) => $m->where('title', 'like', "%{$query}%"))
+                        ->orWhereHas('show.screen.theatre', fn($t) => $t->where('name', 'like', "%{$query}%"))
+                        ->orWhereHas('items.seat', fn($s) => $s->where('seat_number', 'like', "%{$query}%"));
+                });
             })
             ->latest()
             ->paginate(10)
             ->withQueryString();
-        // Return to view
         return view('pages.bookings.index', compact('bookings'));
     }
+
 
     public function update(UpdateBookingStatusRequest $request, Booking $booking)
     {

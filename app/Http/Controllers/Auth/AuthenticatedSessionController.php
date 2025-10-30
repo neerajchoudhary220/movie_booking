@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user->hasRole('Customer')) {
-            return redirect()->intended(route('movies', absolute: false));
+            return redirect()->intended(route('movies.index', absolute: false));
         }
 
         // Default fallback (for any other roles or guests)

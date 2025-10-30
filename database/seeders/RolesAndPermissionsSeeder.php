@@ -107,7 +107,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit seats',
             'delete seats',
 
-            // Bookings (view-only)
+            // Bookings
+            'create bookings',
             'view bookings',
 
             // Dashboard & Notifications

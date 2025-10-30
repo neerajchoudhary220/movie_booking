@@ -37,4 +37,24 @@ class Booking extends Model
     {
         return $this->hasMany(BookingSeat::class);
     }
+
+    //scopes
+    public function scopePending($q)
+    {
+        return $q->where('status', self::STATUS_PENDING);
+    }
+
+    public function scopeConfirmed($q)
+    {
+        return $q->where('status', self::STATUS_CONFIRMED);
+    }
+
+    public function scopeCancelled($q)
+    {
+        return $q->where('status', self::STATUS_CANCELLED);
+    }
+    public function scopeExpired($q)
+    {
+        return $q->where('status', self::STATUS_EXPIRED);
+    }
 }

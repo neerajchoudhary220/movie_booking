@@ -6,7 +6,6 @@ use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
@@ -39,11 +38,6 @@ class MovieController extends Controller
             abort(403, 'You are not authorized to add a new movie.');
         }
 
-        // Authorization check (policy-based + abort fallback)
-        // if (!Gate::allows('create', Movie::class)) {
-        //     abort(403, 'You are not authorized to add a new movie.');
-        // }
-
         return view('pages.movies.admin_and_manger.create');
     }
 
@@ -64,10 +58,10 @@ class MovieController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    public function edit(Movie $movie)
+    public function edit(Movie $movie, Request $request)
     {
         // Authorization check (policy-based + abort fallback)
-        if (!Gate::allows('update', $movie)) {
+        if (!$request->user()->can('update', $movie)) {
             abort(403, 'You are not authorized to edit this movie.');
         }
         return view('pages.movies.admin_and_manger.edit', compact('movie'));
@@ -95,18 +89,18 @@ class MovieController extends Controller
         }
     }
 
-    public function show(Movie $movie)
+    public function show(Movie $movie, Request $request)
     {
-        if (!Gate::allows('view', $movie)) {
+        if (!$request->user()->can('view', $movie)) {
             abort(403, "You are not authorized to view this movie");
         }
         return view('pages.movies.admin_and_manger.show', compact('movie'));
     }
 
-    public function destroy(Movie $movie)
+    public function destroy(Movie $movie, Request $request)
     {
         // Authorization check (policy-based + abort fallback)
-        if (!Gate::allows('delete', $movie)) {
+        if (!$request->user()->can('delete', $movie)) {
             abort(403, 'You are not authorized to delete this movie.');
         }
         $movie->delete();

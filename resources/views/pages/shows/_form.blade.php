@@ -40,6 +40,8 @@
             <x-text-input id="ends_at" name="ends_at" type="datetime-local"
                 value="{{ old('ends_at', isset($show) && $show->ends_at ? $show->ends_at->format('Y-m-d\TH:i') : '') }}"
                 class="block w-full mt-1" />
+            <x-input-error :messages="$errors->get('starts_at')" class="mt-2" />
+
         </div>
     </div>
 

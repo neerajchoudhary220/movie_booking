@@ -10,7 +10,6 @@ use App\Models\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class ShowController extends Controller
 {
@@ -30,12 +29,13 @@ class ShowController extends Controller
 
     public function create(Request $request)
     {
-        if (!Gate::allows('create', Show::class)) {
+        if (!$request->user()->can('create', Show::class)) {
             abort(403, 'You are not authorized to add a new show.');
         }
-
+        $user = $request->user();
         $movies = Movie::active()->get();
-        $screens = Screen::with('theatre')->get();
+        $screens = Screen::with('theatre')
+            ->when($user->hasRole('Manager'), fn($q) => $q->forManager($user->id))->get();
         return view('pages.shows.create', compact('movies', 'screens'));
     }
 
@@ -74,9 +74,9 @@ class ShowController extends Controller
         }
     }
 
-    public function edit(Show $show)
+    public function edit(Show $show, Request $request)
     {
-        if (!Gate::allows('update', $show)) {
+        if (!$request->user()->can('update', $show)) {
             abort(403, 'You are not authorized to edit this show.');
         }
 
@@ -108,18 +108,18 @@ class ShowController extends Controller
         }
     }
 
-    public function show(Show $show)
+    public function show(Show $show, Request $request)
     {
-        if (!Gate::allows('view', $show)) {
+        if (!$request->user()->can('view', $show)) {
             abort(403, 'You are not authorized to view this show.');
         }
         $show->load(['movie', 'screen', 'theatre']);
         return view('pages.shows.show', compact('show'));
     }
 
-    public function destroy(Show $show)
+    public function destroy(Show $show, Request $request)
     {
-        if (!Gate::allows('delete', $show)) {
+        if (!$request->user()->can('delete', $show)) {
             abort(403, 'You are not authorized to delete this show.');
         }
         $show->delete();

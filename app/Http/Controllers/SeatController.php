@@ -6,8 +6,8 @@ use App\Http\Requests\StoreSeatRequest;
 use App\Http\Requests\UpdateSeatRequest;
 use App\Models\Screen;
 use App\Models\Seat;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 
 class SeatController extends Controller
@@ -15,9 +15,9 @@ class SeatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Screen $screen)
+    public function index(Screen $screen, Request $request)
     {
-        if (!Gate::allows('viewAny', [Seat::class, $screen])) {
+        if (!$request->user()->can('viewAny', [Seat::class, $screen])) {
             abort(403, 'You are not authorized for this action');
         }
         $seats = $screen->seats()
@@ -45,9 +45,9 @@ class SeatController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Screen $screen)
+    public function create(Screen $screen, Request $request)
     {
-        if (!Gate::allows('create', [Seat::class, $screen])) {
+        if (!$request->user()->can('create', [Seat::class, $screen])) {
             abort(403, 'You are not authorized for this action');
         }
         return view('pages.seats.create', compact('screen'));
@@ -58,7 +58,7 @@ class SeatController extends Controller
      */
     public function store(StoreSeatRequest $request, Screen $screen)
     {
-        if (!Gate::allows('create', [Seat::class, $screen])) {
+        if (!$request->user()->can('create', [Seat::class, $screen])) {
             abort(403, 'You are not authorized for this action');
         }
         DB::transaction(function () use ($screen, $request) {
@@ -74,9 +74,9 @@ class SeatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Screen $screen, Seat $seat)
+    public function edit(Screen $screen, Seat $seat, Request $request)
     {
-        if (!Gate::allows('update', $seat)) {
+        if (!$request->user()->can('update', $seat)) {
             abort(403, 'You are not authorized for this action');
         }
         return view('pages.seats.edit', compact('screen', 'seat'));
@@ -88,7 +88,7 @@ class SeatController extends Controller
      */
     public function update(UpdateSeatRequest $request, Screen $screen, Seat $seat)
     {
-        if (!Gate::allows('update', $seat)) {
+        if (!$request->user()->can('update', $seat)) {
             abort(403, 'You are not authorized for this action');
         }
         $seat->update($request->validated());
@@ -99,9 +99,9 @@ class SeatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Screen $screen, Seat $seat)
+    public function destroy(Screen $screen, Seat $seat, Request $request)
     {
-        if (!Gate::allows('delete', $seat)) {
+        if (!$request->user()->can('delete', $seat)) {
             abort(403, 'You are not authorized for this action');
         }
         $seat->delete();
@@ -109,9 +109,9 @@ class SeatController extends Controller
             ->with('success', 'Seat deleted successfully.');
     }
 
-    public function generateLayout(Screen $screen)
+    public function generateLayout(Screen $screen, Request $request)
     {
-        if (!Gate::allows('create', [Seat::class, $screen])) {
+        if (!$request->user()->can('create', [Seat::class, $screen])) {
             abort(403, 'You are not authorized for this action');
         }
         DB::transaction(function () use ($screen) {
@@ -138,9 +138,9 @@ class SeatController extends Controller
         return back()->with('success', 'Seat layout generated successfully.');
     }
 
-    public function toggleStatus($screenId, Seat $seat)
+    public function toggleStatus($screenId, Seat $seat, Request $request)
     {
-        if (!Gate::allows('update', $seat)) {
+        if (!$request->user()->can('update', $seat)) {
             abort(403, 'You are not authorized for this action.');
         }
 

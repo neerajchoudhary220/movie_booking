@@ -39,7 +39,7 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3 text-gray-500">{{ $screens->firstItem() + $index }}</td>
                     <td class="px-4 py-3 font-medium text-gray-800">{{ $screen->name }}</td>
-                    <td class="px-4 py-3 text-gray-700">{{ $screen->theatre->name }}</td>
+                    <td class="px-4 py-3 text-gray-700"><a href="{{route('theatres.show',$screen->theatre)}}" class="text-blue-600 hover:underline">{{ $screen->theatre->name }}</a></td>
                     <td class="px-4 py-3">{{ $screen->capacity }}</td>
                     <td class="px-4 py-3">{{ $screen->rows }} × {{ $screen->cols }}</td>
                     <td class="px-4 py-3">

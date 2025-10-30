@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Screen;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateShowRequest extends FormRequest
@@ -23,7 +24,23 @@ class UpdateShowRequest extends FormRequest
     {
         return [
             'movie_id' => 'required|exists:movies,id',
-            'screen_id' => 'required|exists:screens,id',
+            'screen_id'    => [
+                'required',
+                'exists:screens,id',
+                function ($attribute, $value, $fail) {
+                    $user = $this->user();
+
+                    // Only check if user is a Manager
+                    if ($user->hasRole('Manager')) {
+                        $isAllowed = Screen::where('id', $value)
+                            ->whereHas('theatre', fn($q) => $q->where('manager_id', $user->id))
+                            ->exists();
+                        if (!$isAllowed) {
+                            $fail('You are not authorized to create shows for this screen.');
+                        }
+                    }
+                },
+            ],
             'starts_at' => 'required|date',
             'ends_at' => 'nullable|date|after:starts_at',
             'base_price' => 'required|numeric|min:0',

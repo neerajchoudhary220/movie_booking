@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateTheatreRequest;
 use App\Models\Theatre;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+
 
 class TheatreController extends Controller
 {
@@ -55,10 +55,9 @@ class TheatreController extends Controller
         }
     }
 
-    public function edit(Theatre $theatre)
+    public function edit(Theatre $theatre, Request $request)
     {
-        // Authorization check (policy-based + abort fallback)
-        if (!Gate::allows('update', $theatre)) {
+        if (!$request->user()->can('update', $theatre)) {
             abort(403, 'You are not authorized to edit this theatre.');
         }
 
@@ -81,18 +80,18 @@ class TheatreController extends Controller
         }
     }
 
-    public function show(Theatre $theatre)
+    public function show(Theatre $theatre, Request $request)
     {
-        if (!Gate::allows('view', $theatre)) {
+        if (!$request->user()->can('view', $theatre)) {
             abort(403, 'You are not authorized to view this theatre.');
         }
         $theatre->load('manager', 'screens');
         return view('pages.theaters.show', compact('theatre'));
     }
 
-    public function destroy(Theatre $theatre)
+    public function destroy(Theatre $theatre, Request $request)
     {
-        if (!Gate::allows('delete', $theatre)) {
+        if (!$request->user()->can('delete', $theatre)) {
             abort(403, 'You are not authorized to delete this theatre.');
         }
         $theatre->delete();

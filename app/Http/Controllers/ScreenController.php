@@ -8,7 +8,6 @@ use App\Models\Screen;
 use App\Models\Theatre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class ScreenController extends Controller
 {
@@ -36,11 +35,13 @@ class ScreenController extends Controller
      */
     public function create(Request $request)
     {
-        if (!Gate::allows('create', Screen::class)) {
+        $user = $request->user();
+        if (!$user->can('create', Screen::class)) {
             abort(403, 'You are not authorized to add the screen.');
         }
-
-        $theatres = Theatre::active()->get();
+        $theatres = Theatre::active()
+            ->when($user->hasRole('Manager'), fn($q) => $q->forManager($user->id))
+            ->get();
         return view('pages.screens.create', compact('theatres'));
     }
 
@@ -65,9 +66,9 @@ class ScreenController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Screen $screen)
+    public function show(Screen $screen, Request $request)
     {
-        if (!Gate::allows('view', $screen)) {
+        if (!$request->user()->can('view', $screen)) {
             abort(403, 'You are not authorized to view this page');
         }
         $screen->load('theatre');
@@ -77,12 +78,15 @@ class ScreenController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Screen $screen)
+    public function edit(Screen $screen, Request $request)
     {
-        if (!Gate::allows('view', $screen)) {
+        if (!$request->user()->can('view', $screen)) {
             abort(403, 'You are not authorized to do this action');
         }
-        $theatres = Theatre::active()->get();
+        $user = $request->user();
+        $theatres = Theatre::active()
+            ->when($user->hasRole('Manager'), fn($q) => $q->forManager($user->id))
+            ->get();
         return view('pages.screens.edit', compact('screen', 'theatres'));
     }
 
@@ -106,9 +110,9 @@ class ScreenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Screen $screen)
+    public function destroy(Screen $screen, Request $request)
     {
-        if (!Gate::allows('view', $screen)) {
+        if (!$request->user()->can('view', $screen)) {
             abort(403, 'You are not allow to do this action');
         }
         $screen->delete();

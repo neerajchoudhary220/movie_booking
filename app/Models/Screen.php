@@ -34,6 +34,13 @@ class Screen extends Model
     //Scopes
     public function scopeForManager($query, $managerId)
     {
-        return $query->where('manger_id', $managerId);
+        return $query->whereHas('theatre', function ($q) use ($managerId) {
+            $q->where('manager_id', $managerId);
+        });
+    }
+
+    public function scopeForTheatres($query, $theatre_ids)
+    {
+        return $query->whereIn('theatre_id', $theatre_ids);
     }
 }

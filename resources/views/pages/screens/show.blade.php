@@ -17,7 +17,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
         <div>
             <div class="text-gray-500">Theatre</div>
-            <div class="font-medium text-gray-800">{{ $screen->theatre->name }}</div>
+            <div class="font-medium text-gray-800"><a href="{{route('theatres.show',$screen->theatre)}}" class="text-blue-600 hover:underline">{{ $screen->theatre->name }}</a></div>
         </div>
 
         <div>

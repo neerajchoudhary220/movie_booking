@@ -23,14 +23,6 @@
         route="{{ route('shows.index') }}"
         placeholder="Search by movie or theatre" />
 
-    <!-- <form method="GET" class="mb-5 flex flex-col sm:flex-row gap-3">
-        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search by movie or theatre"
-            class="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-72 focus:ring-indigo-500 focus:border-indigo-500">
-        <button type="submit"
-            class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 font-medium transition">
-            <i class="bi bi-search"></i> Search
-        </button>
-    </form> -->
 
     <!-- Table -->
     <div class="overflow-x-auto">
