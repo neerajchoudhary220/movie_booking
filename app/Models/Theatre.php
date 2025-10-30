@@ -35,4 +35,8 @@ class Theatre extends Model
     {
         return $query->where('status', 'active');
     }
+    public function scopeForManager($query, $managerId)
+    {
+        return $query->where('manager_id', $managerId);
+    }
 }

@@ -12,10 +12,7 @@ class UpdateBookingStatusRequest extends FormRequest
     public function authorize(): bool
     {
         $booking = $this->route('booking');
-        return $booking && (
-            $this->user()->can('confirm', $booking) ||
-            $this->user()->can('cancel', $booking)
-        );
+        return $this->user()->can('update', $booking);
     }
 
     /**

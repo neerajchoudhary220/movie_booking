@@ -13,7 +13,7 @@
             <span class="text-sm font-normal text-gray-500">— {{ $show->screen->theatre->name }}</span>
         </h1>
 
-        <a href="{{ url()->previous() }}"
+        <a href="{{ route('movies.showtimes',$show)}}"
             class="px-3 py-1.5 text-sm border border-gray-300 text-gray-600 rounded-md hover:bg-gray-50 transition">
             <i class="bi bi-arrow-left"></i> Back
         </a>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <form id="bookingForm" method="POST" action="{{ route('customer.bookings.store') }}" class="mt-5">
+            <form id="bookingForm" method="POST" action="{{ route('bookings.store') }}" class="mt-5">
                 @csrf
                 <input type="hidden" name="show_id" value="{{ $show->id }}">
                 <input type="hidden" id="selectedSeats" name="seats">
@@ -76,6 +76,11 @@
                     class="w-full mt-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow transition">
                     <i class="bi bi-check-circle"></i> Confirm Booking
                 </button>
+                <button type="button" id="clearSelection"
+                    class="w-full mt-2 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 shadow transition">
+                    <i class="bi bi-x-circle"></i> Clear Selection
+                </button>
+
             </form>
 
         </div>
@@ -149,20 +154,29 @@
             const seatId = $seat.data('seat-id');
             const price = parseFloat($seat.data('price'));
 
+            // Only allow selecting if seat is available (green)
             if ($seat.hasClass('bg-green-500')) {
-                $seat.toggleClass('bg-green-500 bg-indigo-600');
-                if (selectedSeats.has(seatId)) {
-                    selectedSeats.delete(seatId);
-                } else {
-                    selectedSeats.add(seatId);
-                }
-
-                const seatArray = [...selectedSeats];
-                $selectedInput.val(seatArray.join(','));
-                $selectedCount.text(seatArray.length);
-                $totalAmount.text('₹' + (seatArray.length * price));
+                // Change to selected color
+                $seat.removeClass('bg-green-500 hover:bg-green-400').addClass('bg-indigo-600');
+                selectedSeats.add(seatId);
             }
+
+            // Once selected, cannot unselect by clicking again
+            const seatArray = [...selectedSeats];
+            $selectedInput.val(seatArray.join(','));
+            $selectedCount.text(seatArray.length);
+            $totalAmount.text('₹' + (seatArray.length * price));
         });
+
+        $('#clearSelection').on('click', function() {
+            selectedSeats.clear();
+            $('.seat.bg-indigo-600').removeClass('bg-indigo-600').addClass('bg-green-500 hover:bg-green-400');
+            $selectedInput.val('');
+            $selectedCount.text(0);
+            $totalAmount.text('₹0');
+        });
+
+
 
         // Real-time updates via Laravel Echo (Pusher)
         if (typeof window.Echo !== 'undefined') {

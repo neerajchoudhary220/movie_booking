@@ -98,7 +98,7 @@
 
                     <!-- Booking Button -->
                     @auth
-                    <a href="{{route('customer.bookings.create',$show)}}"
+                    <a href="{{route('bookings.create',$show)}}"
                         class="mt-3 sm:mt-0 inline-flex items-center justify-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow transition">
                         <i class="bi bi-ticket-perforated"></i> Book Now
                     </a>

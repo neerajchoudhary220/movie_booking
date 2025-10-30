@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SeatBookedNotification extends Notification implements ShouldQueue
+class CustomerBookingNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,6 +19,7 @@ class SeatBookedNotification extends Notification implements ShouldQueue
     {
         //
     }
+
 
     /**
      * Get the notification's delivery channels.
@@ -36,10 +37,11 @@ class SeatBookedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('🎟 New Seat Booking Pending Confirmation')
-            ->view('emails.bookings.booking_notification', [
+            ->subject("Booking Your Seat")
+            ->view('emails.bookings.customer_notification', [
                 'booking' => $this->booking,
                 'notifiable' => $notifiable,
+
             ]);
     }
 

@@ -80,19 +80,18 @@ $statusColor = [
 
 <body>
     <div class="container">
-        <h2>
-            @if($status === 'booked') 🎟 Seat Booking Received
-            @elseif($status === 'confirmed') ✅ Booking Confirmed
-            @elseif($status === 'cancelled') ❌ Booking Cancelled
-            @else 🎬 Booking Update
-            @endif
-        </h2>
-
         <p>
             Hello {{ $user->name }},<br>
             Your booking for <strong>{{ $movie->title }}</strong> has been
-            <span class="status-label">{{ ucfirst($status) }}</span>.
+            @if($status === 'booked') seat booking received
+            @elseif($status === 'confirmed') confirmed
+            @elseif($status === 'cancelled') cancelled
+            @else 🎬 Booking Update
+            @endif
+
         </p>
+
+
 
         <table class="info-table">
             <tr>
@@ -114,11 +113,10 @@ $statusColor = [
             <tr>
                 <th>Seats</th>
                 <td>
-                    @foreach($booking->seats as $seat)
+
                     <span style="background:#f3f4f6;border-radius:5px;padding:4px 8px;margin:2px;display:inline-block;">
-                        {{ $seat->seat_number }}
+                        {{$booking->items->pluck('seat.seat_number')->join(', ') }}
                     </span>
-                    @endforeach
                 </td>
             </tr>
             <tr>

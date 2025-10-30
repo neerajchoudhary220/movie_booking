@@ -1,83 +1,81 @@
 @extends('layouts.app')
 
-@section('title', 'Bookings')
+@section('title', 'Manage Bookings')
 
 @section('content')
-<div class="p-6">
-    <!-- Header -->
+<div class="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">All Bookings</h2>
-        <a href="{{ route('bookings.create') }}"
-            class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow">
-            + New Booking
-        </a>
+        <h1 class="text-2xl font-semibold text-gray-800">Manage Bookings</h1>
     </div>
 
-    <!-- Table Card -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">#</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Customer</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Movie</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Show</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Seats</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Total</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Date</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                    @forelse ($bookings as $index => $booking)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $bookings->firstItem() + $index }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $booking->user->name ?? '-' }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $booking->show->movie->title ?? '-' }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $booking->show->screen->name ?? '-' }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $booking->seats ?? '-' }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            ₹{{ number_format($booking->total_amount, 2) }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                            {{ $booking->created_at->format('d M Y, h:i A') }}
-                        </td>
-                        <td class="px-4 py-3">
-                            @if ($booking->status === 'confirmed')
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200">
-                                Confirmed
-                            </span>
-                            @else
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                {{ ucfirst($booking->status) }}
-                            </span>
-                            @endif
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                            No bookings found.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+    <!-- 🔍 Search Bar -->
+    <x-action.search-bar
+        route="{{ route('admin.bookings.index') }}"
+        placeholder="Search customer, movie, theatre, or seat..." />
+
+    <!-- Bookings Table -->
+    <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200 mt-4">
+        <table class="w-full text-sm text-left text-gray-700">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">Customer</th>
+                    <th class="px-4 py-3">Movie</th>
+                    <th class="px-4 py-3">Theatre</th>
+                    <th class="px-4 py-3">Show Time</th>
+                    <th class="px-4 py-3">Seats</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($bookings as $booking)
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-3">{{ $booking->id }}</td>
+                    <td class="px-4 py-3">{{ $booking->user->name }}</td>
+                    <td class="px-4 py-3">{{ $booking->show->movie->title }}</td>
+                    <td class="px-4 py-3">{{ $booking->show->screen->theatre->name }}</td>
+                    <td class="px-4 py-3">
+                        {{ \Carbon\Carbon::parse($booking->show->starts_at)->format('d M, h:i A') }}
+                    </td>
+                    <td class="px-4 py-3">{{ $booking->items->pluck('seat.seat_number')->join(', ') }}</td>
+                    <td class="px-4 py-3">₹{{ number_format($booking->total_amount, 2) }}</td>
+                    <td class="px-4 py-3">
+                        <span
+                            @class([ 'px-2 py-1 rounded text-xs font-semibold' , 'bg-yellow-100 text-yellow-800'=> $booking->status === 'pending',
+                            'bg-green-100 text-green-800' => $booking->status === 'confirmed',
+                            'bg-red-100 text-red-800' => $booking->status === 'cancelled',
+                            'bg-gray-100 text-gray-800' => $booking->status === 'expired',
+                            ])>
+                            {{ ucfirst($booking->status) }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-right flex justify-end gap-2 flex-wrap">
+                        <form action="{{route('admin.bookings.update',$booking)}}" method="POST" class="inline-flex gap-2">
+
+                            @can('create bookings', $booking)
+                            @csrf @method('PUT')
+                            <select name="status" class="border rounded px-3 py-1 text-xs">
+                                <option value="confirmed" @selected($booking->status==='confirmed')>Confirm</option>
+                                <option value="cancelled" @selected($booking->status==='cancelled')>Cancel</option>
+                            </select>
+                            <button type="submit" class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700">
+                                Update
+                            </button>
+                        </form>
+                        @endcan
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="9" class="px-4 py-6 text-center text-gray-500">No bookings found.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
-    <!-- Pagination -->
     <div class="mt-6">
         {{ $bookings->links('vendor.pagination.tailwind') }}
     </div>

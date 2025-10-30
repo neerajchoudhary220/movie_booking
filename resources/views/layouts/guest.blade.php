@@ -21,20 +21,17 @@
             <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- Logo / Brand -->
                 <a href="{{ url('/') }}" class="text-lg font-semibold text-indigo-600 flex items-center gap-1">
-                    🎟️ <span class="text-gray-800">{{ config('app.name') }}</span>
+                    <span class="text-gray-800">{{ config('app.name') }}</span>
                 </a>
-
                 <!-- Navigation -->
                 <nav class="flex items-center gap-4">
-                    <a href="{{ route('movies') }}" class="text-sm text-gray-600 hover:text-indigo-600 transition">
+                    <a href="{{ route('movies') }}"
+                        class="text-sm px-2 py-1 rounded-md transition 
+        {{ request()->routeIs('movies.*')? 'text-indigo-600 font-medium bg-indigo-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                         Movies
                     </a>
 
                     @auth
-                    <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:text-indigo-600 transition">
-                        Dashboard
-                    </a>
-
                     <!-- User Dropdown -->
                     <div class="relative">
                         <details class="group">
@@ -51,9 +48,11 @@
                             <div
                                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg z-50 py-2 animate-fade-in">
                                 <a href="{{ route('profile.edit') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition">
+                                    class="block px-4 py-2 text-sm transition rounded-md 
+                    {{ request()->routeIs('profile.*') ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-700' }}">
                                     <i class="bi bi-person-circle mr-1"></i> Profile
                                 </a>
+
                                 <form method="POST" action="{{ route('logout') }}" class="mt-1">
                                     @csrf
                                     <button
@@ -65,14 +64,20 @@
                         </details>
                     </div>
                     @else
-                    <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-indigo-600 transition">
+                    <a href="{{ route('login') }}"
+                        class="text-sm px-2 py-1 rounded-md transition 
+        {{ request()->routeIs('login') ? 'text-indigo-600 font-medium bg-indigo-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                         Login
                     </a>
-                    <a href="{{ route('register') }}" class="text-sm text-gray-600 hover:text-indigo-600 transition">
+
+                    <a href="{{ route('register') }}"
+                        class="text-sm px-2 py-1 rounded-md transition 
+        {{ request()->routeIs('register') ? 'text-indigo-600 font-medium bg-indigo-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                         Register
                     </a>
                     @endauth
                 </nav>
+
             </div>
         </header>
 

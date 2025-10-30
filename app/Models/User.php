@@ -49,10 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-    protected function password(): Attribute
-    {
-        return Attribute::make(set: fn(string $password) => Hash::make($password));
-    }
+
 
     // Relation with Theatre
     public function theatre()

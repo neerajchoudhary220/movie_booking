@@ -70,7 +70,7 @@
 
 
             <li>
-                <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings.*')">
+                <x-nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')">
                     <div class="flex items-center gap-2">
                         <i class="bi bi-journal-bookmark text-gray-500 w-5 text-center"></i>
                         Bookings

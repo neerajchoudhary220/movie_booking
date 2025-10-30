@@ -60,11 +60,9 @@ class CustomerBookingController extends Controller
             }
             DB::commit();
             //Notifications (Admin + Manager)
-            $admins = User::role('Admin')->get();
+            $admin = User::role('Admin')->first();
             $manager = optional($show->screen->theatre)->manager;
-            foreach ($admins as $admin) {
-                $admin->notify(new SeatBookedNotification($booking));
-            }
+            $admin->notify(new SeatBookedNotification($booking));
             if ($manager) {
                 $manager->notify(new SeatBookedNotification($booking));
             }

@@ -10,6 +10,7 @@ class MovieBrowseController extends Controller
 {
     public function index(Request $request)
     {
+
         $category = trim((string) $request->input('category', ''));
         $date = $request->input('date');
         $query = trim((string) $request->input('q', ''));

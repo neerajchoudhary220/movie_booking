@@ -53,4 +53,19 @@ class BookingPolicy
         // Customer can cancel only their pending booking
         return $user->id === $booking->user_id && $booking->status === Booking::STATUS_PENDING;
     }
+
+    public function delete(User $user, Booking $booking): bool
+    {
+        return $user->hasRole('Admin');
+    }
+
+    public function update(User $user, Booking $booking): bool
+    {
+        // Admin/Manager can update any
+        if ($user->hasAnyRole(['Admin', 'Manager'])) {
+            return true;
+        }
+        // Customer can only cancel their own pending
+        return $user->id === $booking->user_id && $booking->status === Booking::STATUS_PENDING;
+    }
 }

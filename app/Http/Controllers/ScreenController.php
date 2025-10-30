@@ -20,7 +20,7 @@ class ScreenController extends Controller
         $user = $request->user();
         $query = Screen::with('theatre')
             ->when($user->hasRole('Manager'), function ($q) use ($user) {
-                $q->whereHas('theatre', fn($t) => $t->forManger($user->id));
+                $q->whereHas('theatre', fn($t) => $t->forManager($user->id));
             })
             ->when($request->filled('q'), function ($q) use ($request) {
                 $search = $request->q;
