@@ -77,7 +77,18 @@
                     </div>
                 </x-nav-link>
             </li>
+            @can('view users')
+            <li>
+                <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-people text-gray-500 w-5 text-center"></i>
+                        Users
+                    </div>
+                </x-nav-link>
+            </li>
+            @endcan
         </ul>
+
 
 
     </nav>

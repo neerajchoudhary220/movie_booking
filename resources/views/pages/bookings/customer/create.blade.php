@@ -23,7 +23,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column: Movie Info -->
         <div class="bg-white border border-gray-100 shadow-sm rounded-xl p-5">
-            <img src="{{ $show->movie->poster_url ?: 'https://via.placeholder.com/400x600?text=Poster' }}"
+            <img src="{{ $movie->poster_url 
+        ? asset('storage/' . $movie->poster_url) 
+        : 'https://placehold.co/400x600/EEE/888?text=Poster+Unavailable' }}"
                 alt="{{ $show->movie->title }}"
                 class="w-full rounded-lg shadow mb-5 object-cover">
 

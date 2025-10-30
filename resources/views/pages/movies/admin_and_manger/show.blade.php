@@ -19,7 +19,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Movie Poster -->
         <div class="md:col-span-1 flex justify-center">
-            <img src="{{ $movie->poster_url ?: 'https://via.placeholder.com/400x600?text=No+Poster+Available' }}"
+            <img src="{{ $movie->poster_url 
+        ? asset('storage/' . $movie->poster_url) 
+        : 'https://placehold.co/400x600/EEE/888?text=Poster+Unavailable' }}"
                 alt="{{ $movie->title }} Poster"
                 class="w-full max-w-xs h-auto rounded-lg border border-gray-200 shadow-sm object-cover">
         </div>

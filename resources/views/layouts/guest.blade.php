@@ -25,7 +25,7 @@
                 </a>
                 <!-- Navigation -->
                 <nav class="flex items-center gap-4">
-                    <a href="{{ route('movies') }}"
+                    <a href="{{ route('movies.index') }}"
                         class="text-sm px-2 py-1 rounded-md transition 
         {{ request()->routeIs('movies.*')? 'text-indigo-600 font-medium bg-indigo-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                         Movies

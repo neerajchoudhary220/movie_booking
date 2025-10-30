@@ -29,7 +29,7 @@ class StoreMovieRequest extends FormRequest
             'language' => 'nullable|string|max:100',
             'duration' => 'nullable|integer|min:1|max:500',
             'release_date' => 'nullable|date',
-            'poster_url' => 'nullable|url|max:500',
+            'poster' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'description' => 'nullable|string|max:2000',
             'status' => 'required|in:active,inactive',
         ];

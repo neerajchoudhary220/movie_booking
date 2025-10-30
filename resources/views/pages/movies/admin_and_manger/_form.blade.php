@@ -9,8 +9,36 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
             <x-input-label for="category" :value="__('Category')" />
-            <x-text-input id="category" name="category" value="{{ old('category', $movie->category ?? '') }}" class="block w-full mt-1" />
+
+            <select id="category" name="category"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">Select Category</option>
+                @foreach ([
+                'Action',
+                'Adventure',
+                'Animation',
+                'Biography',
+                'Comedy',
+                'Documentary',
+                'Drama',
+                'Fantasy',
+                'Historical',
+                'Horror',
+                'Mystery',
+                'Romance',
+                'Sci-Fi',
+                'Thriller',
+                ] as $category)
+                <option value="{{ $category }}"
+                    {{ old('category', $movie->category ?? '') === $category ? 'selected' : '' }}>
+                    {{ $category }}
+                </option>
+                @endforeach
+            </select>
+
+            <x-input-error :messages="$errors->get('category')" class="mt-2" />
         </div>
+
         <div>
             <x-input-label for="language" :value="__('Language')" />
             <x-text-input id="language" name="language" value="{{ old('language', $movie->language ?? '') }}" class="block w-full mt-1" />
@@ -35,9 +63,27 @@
     </div>
 
     <div>
-        <x-input-label for="poster_url" :value="__('Poster URL')" />
-        <x-text-input id="poster_url" name="poster_url" value="{{ old('poster_url', $movie->poster_url ?? '') }}" class="block w-full mt-1" />
+        <x-input-label for="poster" :value="__('Movie Poster')" />
+
+        <input
+            id="poster"
+            type="file"
+            name="poster"
+            accept="image/*"
+            class="block w-full mt-1 text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+
+        @if (!empty($movie->poster_url))
+        <div class="mt-3">
+            <p class="text-sm text-gray-600 mb-1">Current Poster:</p>
+            <img src="{{ asset('storage/' . $movie->poster_url) }}"
+                alt="Current Poster"
+                class="w-32 h-48 object-cover rounded-md border border-gray-200 shadow-sm">
+        </div>
+        @endif
+
+        <x-input-error :messages="$errors->get('poster')" class="mt-2" />
     </div>
+
 
     <div>
         <x-input-label for="description" :value="__('Description')" />

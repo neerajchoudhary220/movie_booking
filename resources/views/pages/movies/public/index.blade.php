@@ -27,7 +27,9 @@
         @forelse($movies as $movie)
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden">
             <div class="relative">
-                <img src="{{ $movie->poster_url ?? 'https://via.placeholder.com/640x360?text=Poster' }}" class="w-full h-56 object-cover rounded-t-2xl">
+                <img src="{{ $movie->poster_url 
+        ? asset('storage/' . $movie->poster_url) 
+        : 'https://placehold.co/400x600/EEE/888?text=Poster+Unavailable' }}" class="w-full h-56 object-cover rounded-t-2xl">
                 <span class="absolute top-2 left-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">
                     {{ $movie->category ?? 'Uncategorized' }}
                 </span>

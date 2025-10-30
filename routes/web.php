@@ -11,11 +11,12 @@ use App\Http\Controllers\ScreenController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TheatreController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 //Customer
 Route::middleware('customer')->controller(MovieBrowseController::class)->group(function () {
-    Route::get('/', 'index')->name('movies');
+    Route::get('/', 'index')->name('movies.index');
     Route::get('show-times/{movie}', 'showtimes')->name('movies.showtimes');
 
     Route::middleware('auth')->group(function () {
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'checkRole:Admin,Manager'])->prefix('admin')->group(f
             Route::get('/{booking}', 'show')->name('show');
             Route::put('/{booking}', 'update')->name('update');
         });
+        Route::resource('users', UserController::class);
     });
     //Theatres
     Route::resource('theatres', TheatreController::class);

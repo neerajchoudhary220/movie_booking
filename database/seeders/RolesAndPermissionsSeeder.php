@@ -62,6 +62,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
             //Notifications
             'send notifications',
+            //users
+            'view users',
+            'edit users'
         ];
 
         foreach ($permissions as $permission) {

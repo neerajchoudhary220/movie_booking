@@ -8,7 +8,7 @@
         <i class="bi bi-pencil-square text-indigo-600"></i> Edit Movie
     </h1>
 
-    <form action="{{ route('admin.movies.update', $movie) }}" method="POST">
+    <form action="{{ route('admin.movies.update', $movie) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('pages.movies.admin_and_manger._form', ['movie' => $movie])

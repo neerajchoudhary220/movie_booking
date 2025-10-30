@@ -15,7 +15,7 @@
 
             <!-- Logo / App Name -->
             <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800 hover:text-indigo-600 transition hidden md:block">
-                🎟️ {{ config('app.name', 'MovieBook') }}
+                {{ config('app.name', 'MovieBook') }}
             </a>
         </div>
 

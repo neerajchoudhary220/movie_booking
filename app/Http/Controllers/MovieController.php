@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -50,6 +51,10 @@ class MovieController extends Controller
     {
         try {
             $data = $request->validated();
+            if ($request->hasFile('poster')) {
+                $posterPath = $request->file('poster')->store('posters', 'public');
+                $data['poster_url'] = $posterPath;
+            }
             // Auto-generate slug if not provided
             $data['slug'] = $data['slug'] ?? str()->slug($data['title']);
             Movie::create($data);
@@ -72,6 +77,15 @@ class MovieController extends Controller
     {
         try {
             $data = $request->validated();
+            if ($request->hasFile('poster')) {
+                // Delete old one if exists
+                if ($movie->poster_url && Storage::disk('public')->exists($movie->poster_url)) {
+                    Storage::disk('public')->delete($movie->poster_url);
+                }
+
+                $movie->poster_url = $request->file('poster')->store('posters', 'public');
+            }
+
             $data['slug'] = $data['slug'] ?? str()->slug($data['title']);
             $movie->update($data);
             return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully.');
