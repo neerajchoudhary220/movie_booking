@@ -44,6 +44,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         $user->assignRole('Customer');
         Auth::login($user);
-        return redirect(route('movies', absolute: false));
+        return redirect(route('movies.index', absolute: false));
     }
 }
