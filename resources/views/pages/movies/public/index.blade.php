@@ -43,6 +43,7 @@
                 </a>
             </div>
         </div>
+
         @empty
         <div class="col-span-full text-gray-500 text-center py-10">No movies found.</div>
         @endforelse

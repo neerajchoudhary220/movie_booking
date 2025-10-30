@@ -2,6 +2,7 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
@@ -15,11 +16,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(MovieBrowseController::class)->group(function () {
     Route::get('/', 'index')->name('movies');
-    Route::get('show-times', 'showtimes')->name('movies.showtimes');
+    Route::get('show-times/{movie}', 'showtimes')->name('movies.showtimes');
 });
 
 
 Route::middleware(['auth'])->group(function () {
+    //Customer Booking
+    Route::controller(CustomerBookingController::class)->prefix('bookings')->name('customer.bookings.')->group(function () {
+        Route::get('create/{show}', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+    });
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
     });

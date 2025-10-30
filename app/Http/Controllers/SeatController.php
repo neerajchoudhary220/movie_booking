@@ -6,7 +6,6 @@ use App\Http\Requests\StoreSeatRequest;
 use App\Http\Requests\UpdateSeatRequest;
 use App\Models\Screen;
 use App\Models\Seat;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -21,7 +20,6 @@ class SeatController extends Controller
         if (!Gate::allows('viewAny', [Seat::class, $screen])) {
             abort(403, 'You are not authorized for this action');
         }
-        // $seats = $screen->seats()->orderBy('row_index')->orderBy('col_number')->get();
         $seats = $screen->seats()
             ->orderBy('row_index')
             ->orderBy('col_number')
@@ -140,18 +138,17 @@ class SeatController extends Controller
         return back()->with('success', 'Seat layout generated successfully.');
     }
 
-    public function toggleStatus(Request $request, $screenId, Seat $seat)
+    public function toggleStatus($screenId, Seat $seat)
     {
         if (!Gate::allows('update', $seat)) {
             abort(403, 'You are not authorized for this action.');
         }
 
-        // Ensure the seat belongs to this screen
         if ($seat->screen_id != $screenId) {
             abort(403, 'Unauthorized seat access.');
         }
 
-        // Toggle between available and blocked
+
         $statusCycle = [
             Seat::STATUS_AVAILABLE => Seat::STATUS_BLOCKED,
             Seat::STATUS_BLOCKED   => Seat::STATUS_AVAILABLE,
@@ -160,7 +157,7 @@ class SeatController extends Controller
         $newStatus = $statusCycle[$seat->status] ?? Seat::STATUS_AVAILABLE;
         $seat->update(['status' => $newStatus]);
 
-        // 🧮 Get updated counts (using scopes)
+
         $screen = $seat->screen;
         $counts = [
             'total'     => $screen->seats()->count(),

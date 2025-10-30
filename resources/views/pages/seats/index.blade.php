@@ -12,12 +12,15 @@
                 Seats — {{ $screen->name }}
             </h1>
             <div class="text-sm text-gray-500 mt-1">
-                🎬 Theatre: <span class="font-medium text-gray-800">{{ $screen->theatre->name }}</span>
+                <i class="bi bi-building text-gray-500"></i> Theatre: <span class="font-medium text-gray-800">{{ $screen->theatre->name }}</span>
                 • {{ $screen->theatre->city ?? '-' }}, {{ $screen->theatre->state ?? '-' }}
                 • Capacity: <span class="font-semibold text-gray-700">{{ $screen->capacity }}</span>
             </div>
         </div>
         <div class="flex gap-2">
+            <a href="{{ route('screens.index') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-1">
+                <i class="bi bi-arrow-left-circle"></i> Back to Screens
+            </a>
             @can('create', [App\Models\Seat::class, $screen])
             <a href="{{ route('screens.seats.create', $screen) }}"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-1">
@@ -51,7 +54,6 @@
                 <span class="w-6 text-gray-600 text-sm font-semibold">{{ $rowLabel }}</span>
 
                 @foreach($rowSeats as $seat)
-                {{ logger()->info($seat) }}
                 <div title="Seat {{ $seat->seat_number }} ({{ ucfirst($seat->type) }}) - {{ ucfirst($seat->status) }}"
                     data-seat-id="{{ $seat->id }}" @class(['base-class seat-tile w-10 h-12 flex flex-col items-center justify-end text-center rounded-md cursor-pointer transition-transform hover:scale-105', 'bg-green-500 text-white'=> $seat->status === 'available',
                     'bg-yellow-400 text-white' => $seat->status === 'pending',

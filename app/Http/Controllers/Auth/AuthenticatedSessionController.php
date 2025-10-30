@@ -28,7 +28,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+
+        // Role-based redirection
+        if ($user->hasRole('Admin') || $user->hasRole('Manager')) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        if ($user->hasRole('Customer')) {
+            return redirect()->intended(route('movies', absolute: false));
+        }
+
+        // Default fallback (for any other roles or guests)
+        return redirect()->intended('/');
     }
 
     /**

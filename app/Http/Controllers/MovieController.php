@@ -32,12 +32,16 @@ class MovieController extends Controller
         return view('pages.movies.admin_and_manger.index', compact('movies'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        // Authorization check (policy-based + abort fallback)
-        if (!Gate::allows('create', Movie::class)) {
+        if (!$request->user()->can('create', Movie::class)) {
             abort(403, 'You are not authorized to add a new movie.');
         }
+
+        // Authorization check (policy-based + abort fallback)
+        // if (!Gate::allows('create', Movie::class)) {
+        //     abort(403, 'You are not authorized to add a new movie.');
+        // }
 
         return view('pages.movies.admin_and_manger.create');
     }
