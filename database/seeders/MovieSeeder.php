@@ -28,7 +28,7 @@ class MovieSeeder extends Seeder
             ],
             [
                 'title'       => '3 Idiots',
-                'category'    => 'Comedy-Drama',
+                'category'    => 'Comedy',
                 'duration'    => 170,
                 'language'    => 'Hindi',
                 'release_date' => Carbon::parse('2009-12-25'),

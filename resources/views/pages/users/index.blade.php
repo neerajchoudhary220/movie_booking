@@ -39,7 +39,9 @@
                     <th class="px-6 py-3">Name</th>
                     <th class="px-6 py-3">Email</th>
                     <th class="px-6 py-3">Role</th>
+                    @if(request()->get('tab')==='managers')
                     <th class="px-6 py-3 text-right">Action</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -53,19 +55,19 @@
                     <td class="px-6 py-3">{{ $user->name }}</td>
                     <td class="px-6 py-3">{{ $user->email }}</td>
                     <td class="px-6 py-3 capitalize">{{ $user->getRoleNames()->implode(', ') }}</td>
-                    <td class="px-6 py-3 text-right">
-                        @if(!$user->hasRole('admin'))
-                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-red-600 hover:text-red-800 text-sm font-medium"
-                                onclick="return confirm('Are you sure?')">
-                                Delete
-                            </button>
-                        </form>
-                        @endif
+                    @can('edit users',$user)
+                    @if(request()->get('tab')==='managers' && $user->hasRole('Manager'))
+
+                    <td class="px-4 py-3 text-right flex justify-end gap-2 flex-wrap">
+
+                        <a href="{{ route('admin.users.edit', $user) }}"
+                            class="flex items-center justify-center gap-1 px-3 py-1.5 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-500 transition">
+                            <i class="bi bi-pencil"></i> Edit
+
                     </td>
+                    </a>
+                    @endif
+                    @endcan
                 </tr>
                 @empty
                 <tr>

@@ -58,14 +58,14 @@
                 </x-nav-link>
             </li>
 
-            <li>
+            <!-- <li>
                 <x-nav-link href="#" :active="request()->routeIs('seats.*')">
                     <div class="flex items-center gap-2">
                         <i class="bi bi-box2 text-gray-500 w-5 text-center"></i>
                         Seats
                     </div>
                 </x-nav-link>
-            </li>
+            </li> -->
 
 
             <li>

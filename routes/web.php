@@ -50,7 +50,7 @@ Route::middleware(['auth', 'checkRole:Admin,Manager'])->prefix('admin')->group(f
             Route::get('/{booking}', 'show')->name('show');
             Route::put('/{booking}', 'update')->name('update');
         });
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserController::class)->except('destroy');
     });
     //Theatres
     Route::resource('theatres', TheatreController::class);

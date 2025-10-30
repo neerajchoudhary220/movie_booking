@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreManagerRequest;
+use App\Http\Requests\UpdateManagerRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('pages.users.create');
+        $user = new User();
+        return view('pages.users.create', compact('user'));
     }
 
     /**
@@ -46,42 +48,32 @@ class UserController extends Controller
      */
     public function store(StoreManagerRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->only('name', 'email');
         $data['password'] = Hash::make($request->password);
         $manager = User::create($data);
         $manager->assignRole('Manager');
         return redirect()->route('admin.users.index')->with('success', 'Manager added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        return view('pages.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateManagerRequest $request, User $user)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $data = $request->only('name', 'email');
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+        $user->update($data);
+        return redirect()->route('admin.users.index')->with('success', 'Manager updated successfully.');
     }
 }
