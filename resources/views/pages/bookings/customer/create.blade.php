@@ -13,7 +13,7 @@
             <span class="text-sm font-normal text-gray-500">— {{ $show->screen->theatre->name }}</span>
         </h1>
 
-        <a href="{{ route('movies.showtimes',$show)}}"
+        <a href="{{ route('movies.showtimes',$show->movie)}}"
             class="px-3 py-1.5 text-sm border border-gray-300 text-gray-600 rounded-md hover:bg-gray-50 transition">
             <i class="bi bi-arrow-left"></i> Back
         </a>
@@ -45,45 +45,7 @@
                 </div>
             </div>
 
-            <hr class="my-4">
 
-            <div class="bg-gray-50 p-3 rounded-lg border text-sm text-gray-700">
-                <div class="flex justify-between">
-                    <span><i class="bi bi-box mr-1 text-gray-500"></i> Selected Seats:</span>
-                    <span id="selectedCount">0</span>
-                </div>
-                <div class="flex justify-between mt-1">
-                    <span><i class="bi bi-cash mr-1 text-gray-500"></i> Estimated Total:</span>
-                    <span id="totalAmount">₹0</span>
-                </div>
-            </div>
-
-            <form id="bookingForm" method="POST" action="{{ route('bookings.store') }}" class="mt-5">
-                @csrf
-                <input type="hidden" name="show_id" value="{{ $show->id }}">
-                <input type="hidden" id="selectedSeats" name="seats">
-
-                <!-- Error Box -->
-                @if ($errors->any())
-                <div class="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3">
-                    <ul class="list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
-
-                <button type="submit"
-                    class="w-full mt-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow transition">
-                    <i class="bi bi-check-circle"></i> Confirm Booking
-                </button>
-                <button type="button" id="clearSelection"
-                    class="w-full mt-2 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 shadow transition">
-                    <i class="bi bi-x-circle"></i> Clear Selection
-                </button>
-
-            </form>
 
         </div>
 
@@ -125,14 +87,79 @@
             </div>
 
             <!-- Seat Legend -->
-            <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm text-gray-700">
-                <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded-sm"></span> Available</div>
-                <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-400 rounded-sm"></span> Pending</div>
-                <div class="flex items-center gap-2"><span class="w-4 h-4 bg-blue-500 rounded-sm"></span> Booked</div>
-                <div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-600 rounded-sm"></span> Blocked</div>
+            <div class="mt-8 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 text-sm text-gray-700">
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-green-500 rounded-sm"></span>
+                        Available (<span id="count-available">{{$availableCount}}</span>)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-yellow-400 rounded-sm"></span>
+                        Pending (<span id="count-pending">{{ $pendingCount }}</span>)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-blue-500 rounded-sm"></span>
+                        Booked (<span id="count-booked">{{ $bookedCount }}</span>)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-red-600 rounded-sm"></span>
+                        Blocked (<span id="count-blocked">{{ $blockedCount }}</span>)
+                    </div>
+                </div>
+
+                <div class="text-gray-600 text-sm font-medium bg-gray-100 border rounded-lg px-4 py-2">
+                    Total Seats: <span class="text-gray-800 font-semibold" id="count-total">{{ $totalSeats }}</span>
+                </div>
             </div>
             @endif
+            <div class="lg:col-span-2 gap-8">
+                <div class="bg-white border-gray-100 shadow-sm rounded-xl p-5">
+                    <hr class="my-4">
+
+                    <div class="bg-gray-50 p-3 rounded-lg border text-sm text-gray-700">
+                        <div class="flex justify-between">
+                            <span><i class="bi bi-box mr-1 text-gray-500"></i> Selected Seats:</span>
+                            <span id="selectedCount">0</span>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span><i class="bi bi-cash mr-1 text-gray-500"></i> Estimated Total:</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                    </div>
+
+                    <form id="bookingForm" method="POST" action="{{ route('bookings.store') }}" class="mt-5">
+                        @csrf
+                        <input type="hidden" name="show_id" value="{{ $show->id }}">
+                        <input type="hidden" id="selectedSeats" name="seats">
+
+                        <!-- Error Box -->
+                        @if ($errors->any())
+                        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3">
+                            <ul class="list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        <div class="flex flex-1 item-center justify-end">
+                            <button type="submit"
+                                class=" mt-4 mr-2 py-2 px-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow transition">
+                                <i class="bi bi-check-circle"></i> Confirm Booking
+                            </button>
+                            <button type="button" id="clearSelection"
+                                class=" mt-4 py-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 shadow transition hidden">
+                                <i class="bi bi-x-circle"></i> Clear Selection
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
         </div>
+
     </div>
 </div>
 @endsection
@@ -144,11 +171,8 @@
         const $selectedInput = $('#selectedSeats');
         const $selectedCount = $('#selectedCount');
         const $totalAmount = $('#totalAmount');
-        // const basePrice = {
-        //     {
-        //         $show -> base_price
-        //     }
-        // };
+        const $clearSelection = $("#clearSelection")
+
 
         // Seat selection
         $('.seat').on('click', function() {
@@ -156,11 +180,16 @@
             const seatId = $seat.data('seat-id');
             const price = parseFloat($seat.data('price'));
 
+
             // Only allow selecting if seat is available (green)
             if ($seat.hasClass('bg-green-500')) {
                 // Change to selected color
                 $seat.removeClass('bg-green-500 hover:bg-green-400').addClass('bg-indigo-600');
                 selectedSeats.add(seatId);
+            }
+            console.info(selectedSeats.length);
+            if (selectedSeats.size > 0) {
+                $clearSelection.removeClass('hidden');
             }
 
             // Once selected, cannot unselect by clicking again
@@ -170,8 +199,9 @@
             $totalAmount.text('₹' + (seatArray.length * price));
         });
 
-        $('#clearSelection').on('click', function() {
+        $clearSelection.on('click', function() {
             selectedSeats.clear();
+            $(this).addClass('hidden');
             $('.seat.bg-indigo-600').removeClass('bg-indigo-600').addClass('bg-green-500 hover:bg-green-400');
             $selectedInput.val('');
             $selectedCount.text(0);
@@ -207,7 +237,6 @@
             return colors[status] || 'bg-gray-400';
         }
 
-        console.log('🎬 Seat Booking UI ready — Live updates active.');
     });
 </script>
 @endpush

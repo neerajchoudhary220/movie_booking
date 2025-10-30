@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BookingUpdatedEvent;
 use App\Http\Requests\UpdateBookingStatusRequest;
 use App\Models\Booking;
 use App\Notifications\BookingStatusNotification;
@@ -52,6 +53,7 @@ class BookingController extends Controller
                 $booking->items->each(fn($item) => $item->seat->update(['status' => 'available']));
             }
             $booking->user->notify(new BookingStatusNotification($booking, $status));
+            broadcast(new BookingUpdatedEvent($booking, $status));
             DB::commit();
             return back()->with('success', "Booking {$status} successfully.");
         } catch (\Exception $e) {

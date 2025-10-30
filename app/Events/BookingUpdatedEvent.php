@@ -26,7 +26,6 @@ class BookingUpdatedEvent implements ShouldBroadcastNow
 
     public function __construct(Booking $booking, $status)
     {
-        logger()->info("working booking updated event");
         $this->showId = $booking->show_id;
         $this->status = $status;
         $this->seats = $booking->items()->with('seat:id,status')->get();

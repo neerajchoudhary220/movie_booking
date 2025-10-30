@@ -10,7 +10,6 @@ use App\Models\Seat;
 use App\Models\Show;
 use App\Models\User;
 use App\Notifications\SeatBookedNotification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +19,12 @@ class CustomerBookingController extends Controller
     {
         $show->load('movie', 'screen.theatre');
         $seats = $show->screen->seats()->orderBy('row_index')->orderBy('col_number')->get();
-        return view('pages.bookings.customer.create', compact('seats', 'show'));
+        $totalSeats = $show->screen->seats()->count();
+        $availableCount = $show->screen->seats()->available()->count();
+        $pendingCount   = $show->screen->seats()->pending()->count();
+        $bookedCount    = $show->screen->seats()->booked()->count();
+        $blockedCount   = $show->screen->seats()->blocked()->count();
+        return view('pages.bookings.customer.create', compact('seats', 'show', 'totalSeats', 'availableCount', 'pendingCount', 'bookedCount', 'blockedCount'));
     }
 
     public function store(StoreBookingRequest $request)
@@ -68,7 +72,7 @@ class CustomerBookingController extends Controller
             }
             // Broadcast seat changes
             broadcast(new BookingUpdatedEvent($booking, 'pending'))->toOthers();
-            return redirect()->route('customer.bookings.create', $show)
+            return redirect()->route('bookings.create', $show)
                 ->with('success', 'Seats reserved! Waiting for manager confirmation.');
         } catch (\Exception $e) {
             DB::rollBack();
