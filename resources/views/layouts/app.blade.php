@@ -17,6 +17,15 @@
 </head>
 
 <body class="min-h-screen bg-gray-100">
+    <!-- Toast -->
+    @if(session('success'))
+    <x-alert-toast type="success" :message="session('success')" />
+    @endif
+
+    @if(session('error'))
+    <x-alert-toast type="error" :message="session('error')" />
+    @endif
+
     <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
         {{-- Sidebar (desktop) --}}
         <aside class="hidden md:flex md:w-64 md:flex-col bg-white border-r">
@@ -47,6 +56,34 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('.toast-item').each(function() {
+                const $toast = $(this);
+                const timeout = parseInt($toast.data('timeout')) || 4000;
+                const $progress = $toast.find('.toast-progress');
+
+                // Animate progress bar
+                $progress.animate({
+                        width: '100%'
+                    }, 0)
+                    .animate({
+                        width: '0%'
+                    }, timeout, 'linear');
+
+                // Auto-hide after timeout
+                setTimeout(() => {
+                    $toast.fadeOut(400, () => $toast.remove());
+                }, timeout);
+
+                // Manual close
+                $toast.find('.close-toast').on('click', function() {
+                    $toast.fadeOut(300, () => $toast.remove());
+                });
+            });
+        });
+    </script>
+    </script>
     @stack('scripts')
 </body>
 

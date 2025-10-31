@@ -86,6 +86,16 @@
                 </x-nav-link>
             </li>
             @endcan
+            @if(auth()->user()->hasRole('Admin'))
+            <li>
+                <x-nav-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-gear text-gray-500 w-5 text-center"></i>
+                        Setting
+                    </div>
+                </x-nav-link>
+            </li>
+            @endif
         </ul>
 
 

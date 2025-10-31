@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\MovieBrowseController;
 use App\Http\Controllers\ScreenController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TheatreController;
 use App\Http\Controllers\UserController;
@@ -50,7 +51,13 @@ Route::middleware(['auth', 'checkRole:Admin,Manager'])->prefix('admin')->group(f
             Route::get('/{booking}', 'show')->name('show');
             Route::put('/{booking}', 'update')->name('update');
         });
-        Route::resource('users', UserController::class)->except('destroy');
+        Route::middleware('checkRole:Admin')->group(function () {
+            Route::resource('users', UserController::class)->except('destroy');
+            Route::controller(SettingController::class)->prefix('settings')->name('settings.')->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/update', 'update')->name('update');
+            });
+        });
     });
     //Theatres
     Route::resource('theatres', TheatreController::class);
