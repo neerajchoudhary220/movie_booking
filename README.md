@@ -34,7 +34,7 @@ This project was developed as part of the **assessment task** assigned by **Kris
 
 | Category | Technology Used |
 |-----------|-----------------|
-| Framework | **Laravel 11.x** |
+| Framework | **Laravel 12** |
 | Frontend | **Blade (Tailwind CSS)**, **Bootstrap Icons** |
 | Authentication | **Laravel Breeze** |
 | Roles & Permissions | **Spatie Laravel Permission** |
