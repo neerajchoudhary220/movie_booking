@@ -1,5 +1,7 @@
 @php($editing = isset($movie))
+
 <div class="space-y-4">
+
     <div>
         <x-input-label for="title" :value="__('Title')" />
         <x-text-input id="title" name="title" value="{{ old('title', $movie->title ?? '') }}" class="block w-full mt-1" required />
@@ -38,11 +40,23 @@
 
             <x-input-error :messages="$errors->get('category')" class="mt-2" />
         </div>
-
         <div>
             <x-input-label for="language" :value="__('Language')" />
-            <x-text-input id="language" name="language" value="{{ old('language', $movie->language ?? '') }}" class="block w-full mt-1" />
+
+            <select id="language" name="language"
+                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">-- Select Language --</option>
+                @foreach ($languages as $lang)
+                <option value="{{ $lang }}" {{ old('language', $movie->language ?? '') === $lang ? 'selected' : '' }}>
+                    {{ $lang }}
+                </option>
+                @endforeach
+            </select>
+
+            <x-input-error :messages="$errors->get('language')" class="mt-2" />
         </div>
+
+
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

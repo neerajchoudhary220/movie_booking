@@ -7,8 +7,7 @@
     <h1 class="text-xl font-semibold mb-5 text-gray-800 flex items-center gap-2">
         <i class="bi bi-plus-circle text-indigo-600"></i> Add New Movie
     </h1>
-
-    <form action="{{ route('admin.movies.store') }}" method="POST">
+    <form action="{{ route('admin.movies.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @include('pages.movies.admin_and_manger._form')
 

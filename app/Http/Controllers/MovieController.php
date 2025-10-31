@@ -38,7 +38,8 @@ class MovieController extends Controller
             abort(403, 'You are not authorized to add a new movie.');
         }
 
-        return view('pages.movies.admin_and_manger.create');
+        $languages = ['Hindi', 'English', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Bengali', 'Marathi', 'Gujarati'];
+        return view('pages.movies.admin_and_manger.create', compact('languages'));
     }
 
     public function store(StoreMovieRequest $request)
@@ -64,7 +65,9 @@ class MovieController extends Controller
         if (!$request->user()->can('update', $movie)) {
             abort(403, 'You are not authorized to edit this movie.');
         }
-        return view('pages.movies.admin_and_manger.edit', compact('movie'));
+        $languages = ['Hindi', 'English', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Bengali', 'Marathi', 'Gujarati'];
+
+        return view('pages.movies.admin_and_manger.edit', compact('movie', 'languages'));
     }
 
     public function update(UpdateMovieRequest $request, Movie $movie)
